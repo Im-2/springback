@@ -1,0 +1,17 @@
+node_modules/
+.env
+.env.*
+*.key
+*.pem
+secrets*
+*token*
+.DS_Store
+Thumbs.db
+desktop.ini
+__pycache__/
+*.pyc
+.venv/
+# large raw market data
+data/
+*.csv
+*.parquet
