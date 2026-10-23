@@ -27,3 +27,7 @@ common_mistakes, best_practices, scripting_language, writing_ang_debugging, api.
 - How the still-forming last bar is exposed to the script (is `close[last]` the live price?). Needs a test in the editor.
 - Whether `request.earnings` returns deep enough history when the script runs inside the Strategy Tester.
 - Whether the Strategy Tester fills on the signal bar close or next bar open.
+
+## Confirmed platform restrictions (found by running scripts in the editor)
+- `new` is NOT allowed in scripts ("Using \"new\" in scripts is not currently allowed"). So no `new Date(...)`, `new Map`, `new Set`, `new Array`. Use arithmetic on Unix-second timestamps, plain objects/arrays and `series_of()`. Strategy code must stay free of `new`.
+- Other restrictions: none found yet (this list is extended whenever the editor rejects something).

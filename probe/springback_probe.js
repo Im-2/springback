@@ -6,7 +6,20 @@
 describe_indicator('Springback Probe');
 
 const lastIndex = close.length - 1;
-const toDate = ts => new Date(ts * 1000).toISOString().slice(0, 10);
+// Unix seconds -> 'YYYY-MM-DD' (UTC) using arithmetic only: "new" and Date objects are not allowed.
+const pad2 = value => (value < 10 ? '0' : '') + value;
+const toDate = ts => {
+	const days = Math.floor(ts / 86400) + 719468;
+	const era = Math.floor(days / 146097);
+	const dayOfEra = days - era * 146097;
+	const yearOfEra = Math.floor((dayOfEra - Math.floor(dayOfEra / 1460) + Math.floor(dayOfEra / 36524) - Math.floor(dayOfEra / 146096)) / 365);
+	const dayOfYear = dayOfEra - (365 * yearOfEra + Math.floor(yearOfEra / 4) - Math.floor(yearOfEra / 100));
+	const monthIndex = Math.floor((5 * dayOfYear + 2) / 153);
+	const day = dayOfYear - Math.floor((153 * monthIndex + 2) / 5) + 1;
+	const month = monthIndex < 10 ? monthIndex + 3 : monthIndex - 9;
+	const year = yearOfEra + era * 400 + (month <= 2 ? 1 : 0);
+	return year + '-' + pad2(month) + '-' + pad2(day);
+};
 
 // ---- Earnings depth ----
 let earningsData = null;
@@ -26,8 +39,8 @@ if (earningsData && earningsData.error) {
 const earningsList = (Array.isArray(earningsData) ? earningsData : []).slice().sort((a, b) => a.timestamp - b.timestamp);
 const earningsTimes = earningsList.map(record => record.timestamp);
 const earningsWhen = earningsList.map(record => record.when || '?');
-const oldestEarnings = earningsTimes.length ? Math.min(...earningsTimes) : null;
-const newestEarnings = earningsTimes.length ? Math.max(...earningsTimes) : null;
+const oldestEarnings = earningsTimes.length ? earningsTimes.reduce((a, b) => (a < b ? a : b)) : null;
+const newestEarnings = earningsTimes.length ? earningsTimes.reduce((a, b) => (a > b ? a : b)) : null;
 const futureCount = earningsList.filter(record => record.isFuture).length;
 
 // Mark earnings on candles (signal for the Strategy Tester + labels on the chart)
