@@ -9,7 +9,20 @@ const lastIndex = close.length - 1;
 const toDate = ts => new Date(ts * 1000).toISOString().slice(0, 10);
 
 // ---- Earnings depth ----
-const earningsData = await request.earnings(current.ticker);
+let earningsData = null;
+let earningsStatus = 'ok';
+try {
+	earningsData = await request.earnings(current.ticker);
+} catch (caught) {
+	earningsStatus = 'THREW: ' + String(caught && caught.message ? caught.message : caught);
+}
+if (earningsData && earningsData.error) {
+	earningsStatus = 'RETURNED ERROR: ' + String(earningsData.error);
+} else if (earningsStatus === 'ok' && !Array.isArray(earningsData)) {
+	earningsStatus = 'NOT AN ARRAY: ' + typeof earningsData;
+} else if (earningsStatus === 'ok' && earningsData.length === 0) {
+	earningsStatus = 'EMPTY ARRAY';
+}
 const earningsList = (Array.isArray(earningsData) ? earningsData : []).slice().sort((a, b) => a.timestamp - b.timestamp);
 const earningsTimes = earningsList.map(record => record.timestamp);
 const earningsWhen = earningsList.map(record => record.when || '?');
@@ -18,7 +31,9 @@ const newestEarnings = earningsTimes.length ? Math.max(...earningsTimes) : null;
 const futureCount = earningsList.filter(record => record.isFuture).length;
 
 // Mark earnings on candles (signal for the Strategy Tester + labels on the chart)
-const earningsLanded = land_points_onto_series(earningsTimes, earningsWhen, time, 'le');
+const earningsLanded = earningsTimes.length
+	? land_points_onto_series(earningsTimes, earningsWhen, time, 'le')
+	: series_of(null);
 const earningsMarker = for_every(earningsLanded, value => value ? 1 : null);
 const earningsLabels = for_every(earningsLanded, value => value ? 'E:' + value : null);
 
@@ -63,7 +78,7 @@ const rows = [
 	['Oldest earnings', oldestEarnings ? toDate(oldestEarnings) : 'none'],
 	['Newest earnings', newestEarnings ? toDate(newestEarnings) : 'none'],
 	['Future-flagged records', String(futureCount)],
-	['Earnings error', earningsData && earningsData.error ? String(earningsData.error) : 'none']
+	['EARNINGS STATUS', earningsStatus]
 ].map(([label, value]) => ({ cells: [{ text: label, color: 'var(--text-color)', padding: 3 }, { text: value, color: 'var(--text-color)', padding: 3 }] }));
 
 paint_overlay('Springback Probe', { position: 'top_right' }, { rows });
