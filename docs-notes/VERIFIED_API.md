@@ -39,3 +39,10 @@ common_mistakes, best_practices, scripting_language, writing_ang_debugging, api.
 - The script saw bars 2025-07-18 .. 2026-10-23 on the chart as loaded (the visible chart range; candle count not captured), last/prev close matched the chart.
 - `current.now` produced NaN in `(current.now - time[last]) / 3600`: do not depend on `current.now`.
 - Live (forming-bar) behavior: untested until a market day. Design rule: never depend on it; decide signals from closed bars only.
+
+## Probe step 2 result: fill timing (Strategy Tester, AAPL daily, 30 trades, probe/probe-trades.csv)
+- Signal on bar N (the "Entry Triggering Candle") is FILLED AT THE OPEN OF BAR N+1. Entry and exit both.
+- Check vs yfinance unadjusted AAPL daily: entry price vs next-bar open: mean abs diff 0.09 (max 0.49); vs signal-bar close: mean abs diff 1.37 (max 5.01). Exit: 0.06 vs 1.35. Remaining differences are data-vendor noise.
+- Trade cost shown as 0% (default). Daily bars are stamped at the 9:30 ET open (14:30/15:30 WAT).
+- Caveat: compared against yfinance, not the chart labels (I did not see the labels).
+- Harness consequence: primary fill model = next-bar open. The close-fill variant is reported only as a sensitivity.
