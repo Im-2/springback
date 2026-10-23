@@ -31,3 +31,11 @@ common_mistakes, best_practices, scripting_language, writing_ang_debugging, api.
 ## Confirmed platform restrictions (found by running scripts in the editor)
 - `new` is NOT allowed in scripts ("Using \"new\" in scripts is not currently allowed"). So no `new Date(...)`, `new Map`, `new Set`, `new Array`. Use arithmetic on Unix-second timestamps, plain objects/arrays and `series_of()`. Strategy code must stay free of `new`.
 - Other restrictions: none found yet (this list is extended whenever the editor rejects something).
+
+## Probe step 1 results (user's account, AAPL daily, run 2026-10-23, US market closed)
+- `request.earnings(current.ticker)` WORKS inside a script even though the chart's own Earnings line says the plan does not support it. Status ok, 59 records, oldest 2012-01-24, newest 2026-07-30, 0 future-flagged records.
+- Earnings history starts 2012, so a 7,000-bar daily window (back to ~1998) is only covered from 2012 on. The harness must apply the blackout only from 2012-01-24 and treat earlier years as "no earnings data".
+- No upcoming report date came back with the default request. Whether a `timestamp` filter exposes future dates is still to be tested.
+- The script saw bars 2025-07-18 .. 2026-10-23 on the chart as loaded (the visible chart range; candle count not captured), last/prev close matched the chart.
+- `current.now` produced NaN in `(current.now - time[last]) / 3600`: do not depend on `current.now`.
+- Live (forming-bar) behavior: untested until a market day. Design rule: never depend on it; decide signals from closed bars only.
