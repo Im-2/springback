@@ -46,3 +46,10 @@ common_mistakes, best_practices, scripting_language, writing_ang_debugging, api.
 - Trade cost shown as 0% (default). Daily bars are stamped at the 9:30 ET open (14:30/15:30 WAT).
 - Caveat: compared against yfinance, not the chart labels (I did not see the labels).
 - Harness consequence: primary fill model = next-bar open. The close-fill variant is reported only as a sensitivity.
+
+## Probe step 3 result: earnings depth in the Strategy Tester (probe/earnings-trades.csv)
+- The tester analyzed 7,000 daily candles (~27.8 yrs for AAPL) and the "Probe Earnings Bar" signal fired 59 times: the same 59 records the chart script sees. So `request.earnings` works inside the Strategy Tester, same depth as on the chart.
+- Oldest event: 24 Jan 2012 (entry triggered on that bar, filled 25 Jan 2012). Newest: 30 Jul 2026. Exactly 4 events per year 2012-2025, 3 in 2026. Nothing before 2012, nothing after the last reported quarter.
+- `land_points_onto_series(..., 'le')` puts a postmarket report on the report day's own bar (e.g. 24 Jan 2012 after close -> the 24 Jan bar), which is what we want for "last bar before the gap".
+- Harness rule: earnings dates only from 2012-01-24 onward; before that, no blackout (matches the platform).
+- Prices in the tester are split-adjusted (AAPL Jan 2012 ~ $16), not dividend-adjusted.
