@@ -18,7 +18,7 @@ def _inputs(ticker):
     return _cache[ticker]
 
 
-def evaluate(params, tickers=DOW30, use_earnings=False, part=None):
+def evaluate(params, tickers=DOW30, use_earnings=False, part=None, since=None):
     """Return a per-ticker metrics DataFrame. part in {None, 0, 1, 2} selects a third of the window."""
     rows = {}
     for ticker in tickers:
@@ -30,6 +30,10 @@ def evaluate(params, tickers=DOW30, use_earnings=False, part=None):
             start, end = frame.index[lo], frame.index[hi - 1]
             daily, held = daily.iloc[lo:hi], held.iloc[lo:hi]
             trades = trades[(trades["exit"] >= start) & (trades["exit"] <= end)]
+        if since is not None:
+            keep = daily.index >= since
+            daily, held = daily[keep], held[keep]
+            trades = trades[trades["exit"] >= since]
         rows[ticker] = metrics(trades, daily, held)
     return pd.DataFrame(rows).T
 

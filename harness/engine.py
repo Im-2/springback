@@ -20,6 +20,9 @@ class Params:
     stop_atr: float = 3.0    # ATR stop distance from entry fill
     max_bars: int = 10       # time stop, bars held
     atr_len: int = 14        # fixed
+    dip_mode: str = "atr"    # "atr": close < fast EMA - k*ATR ; "rsi": RSI(rsi_len) < rsi_thr
+    rsi_len: int = 3
+    rsi_thr: float = 20.0
     blackout_before: int = 0  # B: calendar days before a report with no new entries (0 = blackout off)
     blackout_after: int = 0   # A: calendar days after a report with no new entries
     pre_exit: bool = False   # exit before an approaching report
@@ -38,6 +41,13 @@ def atr(high, low, close, length):
     true_range = np.maximum(high - low, np.maximum(abs(high - prev_close), abs(low - prev_close)))
     # Wilder smoothing
     return pd.Series(true_range).ewm(alpha=1 / length, adjust=False).mean().to_numpy()
+
+
+def rsi(values, length):
+    delta = pd.Series(values).diff()
+    gain = delta.clip(lower=0).ewm(alpha=1 / length, adjust=False).mean()
+    loss = (-delta.clip(upper=0)).ewm(alpha=1 / length, adjust=False).mean()
+    return (100 - 100 / (1 + gain / loss.replace(0, np.nan))).fillna(50).to_numpy()
 
 
 def earnings_flags(index, earnings, params):
@@ -77,6 +87,7 @@ def run(frame, earnings, params):
     n = len(frame)
     slow_ema, fast_ema = ema(c, params.slow), ema(c, params.fast)
     atr_values = atr(h, l, c, params.atr_len)
+    rsi_values = rsi(c, params.rsi_len) if params.dip_mode == "rsi" else None
     blocked, exit_now = earnings_flags(index, earnings, params)
     warmup = max(params.slow + params.slope_bars, params.min_bars)
 
@@ -133,7 +144,7 @@ def run(frame, earnings, params):
                     in_position = False
         else:
             trend_ok = c[i] > slow_ema[i] and slow_ema[i] > slow_ema[i - params.slope_bars]
-            dip = c[i] < fast_ema[i] - params.k * atr_values[i]
+            dip = (c[i] < fast_ema[i] - params.k * atr_values[i]) if rsi_values is None else rsi_values[i] < params.rsi_thr
             if trend_ok and dip and not blocked[i]:
                 if open_fill:
                     if i + 1 < n:

@@ -16,3 +16,4 @@ data/
 *.csv
 *.parquet
 docs-notes/*-raw.txt
+results_sweep_*.csv
