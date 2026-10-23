@@ -128,9 +128,9 @@ def run(frame, earnings, params):
                 reason = "snapback"
             elif c[i] < slow_ema[i]:
                 reason = "trend"
-            elif c[i] <= entry_fill - params.stop_atr * entry_atr:
+            elif params.stop_atr > 0 and c[i] <= entry_fill - params.stop_atr * entry_atr:
                 reason = "stop"
-            elif held >= params.max_bars:
+            elif params.max_bars > 0 and held >= params.max_bars:
                 reason = "time"
             elif params.pre_exit and exit_now[i]:
                 reason = "earnings"
@@ -143,7 +143,7 @@ def run(frame, earnings, params):
                     trades.append((index[entry_bar], index[i], entry_fill, exit_fill, i - entry_bar))
                     in_position = False
         else:
-            trend_ok = c[i] > slow_ema[i] and slow_ema[i] > slow_ema[i - params.slope_bars]
+            trend_ok = c[i] > slow_ema[i] and (params.slope_bars <= 0 or slow_ema[i] > slow_ema[i - params.slope_bars])
             dip = (c[i] < fast_ema[i] - params.k * atr_values[i]) if rsi_values is None else rsi_values[i] < params.rsi_thr
             if trend_ok and dip and not blocked[i]:
                 if open_fill:
