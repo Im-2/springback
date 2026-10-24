@@ -58,7 +58,7 @@ Measured on the last 7,000 daily bars of each current Dow 30 stock, 2 bps/side s
 Neighbor test (36 settings: RSI level 15/20/25/30 x slow EMA 150/200/250 x fast EMA 8/10/12): mean Sharpe ranges 0.220-0.285 (std 0.014), the chosen setting sits at 0.276; no sharp peak. By RSI level: 15 -> 0.258, 20 -> 0.255, 25 -> 0.267, 30 -> 0.241.
 
 Honest reading:
-- Positive on 28 of 30 stocks and in all three sub-periods on average, but the OLDEST third is weaker (20/30 positive) and the edge is NOT uniform: IBM and DIS lose.
+- Positive on 28 of 30 stocks and in all three sub-periods on average, but the OLDEST third is weaker (19/30 positive) and the edge is NOT uniform: IBM and CVX lose.
 - It does not beat buy and hold on Sharpe (0.28 vs 0.47). What it offers is a much shallower drawdown (-31% vs -69% mean) with 17% of the time invested. The platform's ranking metric is unknown, so I cannot say how it ranks against other entries.
 - It is cost-sensitive: average trade is ~0.3%, so at 10 bps per side the mean Sharpe falls to 0.14. The platform's Strategy Tester showed 0% cost by default.
 - Sharpe here uses daily returns including flat days, one unit per trade, no position sizing.

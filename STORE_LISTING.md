@@ -33,10 +33,10 @@ Every signal is decided on a closed bar using only that bar and older bars, so a
 
 WHAT WAS MEASURED (and what it is not)
 Tested in a local Python model on the last 7,000 daily bars of the current 30 Dow stocks, assuming the next bar's open for fills and 2 basis points of slippage per side:
-- Positive total return on 28 of 30 stocks. IBM and DIS lost money.
-- 167 to 279 trades per stock (median about 213), invested about 17% of the time.
+- Positive total return on 28 of 30 stocks. IBM and CVX lost money.
+- 167 to 268 trades per stock (median about 213), invested about 17% of the time.
 - Average Sharpe 0.28 and average maximum drawdown about -31%. Plain buy and hold over the same bars had a higher average Sharpe (0.47) and a much deeper average drawdown (about -69%). Springback does NOT beat buy and hold on Sharpe; its profile is shallower drawdowns while mostly in cash.
-- The older third of the history was weaker than the other two (20 of 30 stocks positive vs 29 and 22).
+- The older third of the history was weaker than the other two (19 of 30 stocks positive vs 29 and 22).
 - It is cost-sensitive: average trade is only about 0.3%, and at 10 basis points per side average Sharpe falls to about 0.14.
 - On TrendSpider's Strategy Tester, AAPL daily, 7,000 candles, 0% cost: 249 long trades, 72% winners, compounded about +410% for the strategy against about +97,964% for holding AAPL, with a -40% maximum drawdown for the strategy.
 These are past, backtested figures from specific data and settings. They are not a forecast.
