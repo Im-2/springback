@@ -95,8 +95,8 @@ paint(buyLabels, { name: 'BUY', color: '#1e9e4a', backgroundColor: '#1e9e4a', st
 paint(sellLabels, { name: 'SELL', color: '#d63031', backgroundColor: '#d63031', style: 'labels_above' });
 
 const trendNow = close[lastIndex] > slowEma[lastIndex];
-// Tiny two-line legend: short lines, parked left of the top-right chart icons so nothing is cut off.
-paint_overlay('Springback legend', { position: 'top_right', offset_y: 40, offset_x: -60 }, {
+// Tiny two-line legend: short lines, parked bottom right, above the volume bars, away from the price action and the header.
+paint_overlay('Springback legend', { position: 'bottom_right', offset_y: -30, offset_x: -60 }, {
 	rows: [
 		{ cells: [{ text: 'Dip BUY / snap SELL', color: 'var(--text-color)', fontSize: '11px', padding: 2, whiteSpace: 'nowrap' }] },
 		{ cells: [{ text: trendNow ? 'Trend UP' : 'Trend DOWN', color: trendNow ? '#1e9e4a' : '#d63031', fontSize: '11px', padding: 2, whiteSpace: 'nowrap' }] }
