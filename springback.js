@@ -1,4 +1,4 @@
-// Springback: Earnings-Safe Dip Signals  (#TSBuild26, Track 1)
+// Springback: Trend-Filtered Dip Signals  (#TSBuild26, Track 1)
 // Built for the DAILY timeframe, regular trading hours. Long only. Alternating BUY / SELL.
 //
 // BUY  : the stock is in a long-term uptrend (close above the slow EMA) and has just dipped
@@ -7,7 +7,7 @@
 // A signal only ever looks at that bar and older bars, so it never moves after it appears.
 // Fill assumption used in testing: the open of the bar after the signal.
 
-describe_indicator('Springback');
+describe_indicator('Springback: Trend-Filtered Dip Signals');
 
 const slowLength = input.number('Trend EMA', 200, { min: 20, max: 400 });
 const fastLength = input.number('Snapback EMA', 10, { min: 3, max: 100 });
@@ -95,10 +95,10 @@ paint(buyLabels, { name: 'BUY', color: '#1e9e4a', backgroundColor: '#1e9e4a', st
 paint(sellLabels, { name: 'SELL', color: '#d63031', backgroundColor: '#d63031', style: 'labels_above' });
 
 const trendNow = close[lastIndex] > slowEma[lastIndex];
-paint_overlay('Springback legend', { position: 'top_left' }, {
+// Small two-line legend, parked under the chart's top-right icons so it does not cover the header or the indicator list.
+paint_overlay('Springback legend', { position: 'top_right', offset_y: 40, offset_x: -10 }, {
 	rows: [
-		{ cells: [{ text: 'Springback (daily, long only)', color: 'var(--text-color)', fontWeight: 'bold', padding: 3 }] },
-		{ cells: [{ text: 'BUY: uptrend + dip. SELL: snapback or trend lost.', color: 'var(--text-color)', padding: 3 }] },
-		{ cells: [{ text: trendNow ? 'Trend: UP (buys allowed)' : 'Trend: DOWN (no buys)', color: trendNow ? '#1e9e4a' : '#d63031', padding: 3 }] }
+		{ cells: [{ text: 'BUY dip in uptrend / SELL snapback', color: 'var(--text-color)', fontSize: '11px', padding: 2 }] },
+		{ cells: [{ text: trendNow ? 'Trend UP' : 'Trend DOWN (no buys)', color: trendNow ? '#1e9e4a' : '#d63031', fontSize: '11px', padding: 2 }] }
 	]
 });
