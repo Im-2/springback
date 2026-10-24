@@ -17,7 +17,7 @@ Springback buys short dips in stocks that are already in a long-term uptrend, an
 HOW TO READ IT
 - BUY (green label under the bar): the close is above the 200-day EMA (uptrend) AND the 3-day RSI is below 25 (a sharp short-term dip). Act at the next open.
 - SELL (red label above the bar): the close is back at or above the 10-day EMA (the snapback), OR the close has dropped below the 200-day EMA (the uptrend is lost). Act at the next open.
-- Grey line = 200-day trend EMA. Blue line = 10-day snapback EMA. The small legend shows whether the trend is UP or DOWN. No buys are generated while the trend is down.
+- Grey line = 200-day trend EMA. Blue line = 10-day snapback EMA. No buys are generated while the close is below the grey line.
 
 INPUTS (defaults)
 - Trend EMA: 200

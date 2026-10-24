@@ -18,7 +18,14 @@ Legend: [x] done with evidence, [~] done but only partly evidenced, [ ] still to
 - [x] Earnings logic removed (tested and rejected, RESULTS.md Phase 2b), so no dependency on earnings data or plan.
 - [x] No performance promises; measured figures are labeled with what was tested, with limitations (STORE_LISTING.md).
 - [x] Inputs have short names and defaults (Trend EMA 200, Snapback EMA 10, Dip RSI(3) below 25, Ignore unfinished last bar on).
-- [ ] Deadline: the page says Oct 26, an older PDF said Oct 5. Confirm which applies.
+- [x] Deadline: the official hackathon page (trendspider.com/hackathon) says submissions are due October 26, 2026 (no timezone stated). Store listings are reviewed by TrendSpider staff before going live and the review time is not published, so publish early.
+- [x] On-chart legend removed; the chart shows only BUY/SELL labels, the two EMA lines and the indicator name line.
+
+## Store review pitfalls (TrendSpider help: Publishing content to the Store)
+- Title: descriptive, no icons, symbols or emoji.
+- Description: thorough (STORE_LISTING.md).
+- The screenshot taken at share time must show only the indicator: clear other indicators off the chart first.
+- Code must work as described.
 
 ## To do (user)
 1. Monday (market open): live-bar check, to confirm no signal flickers on the forming bar.
